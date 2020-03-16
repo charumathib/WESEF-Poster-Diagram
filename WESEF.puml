@@ -1,0 +1,73 @@
+@startuml WESEF
+
+skinparam defaultTextAlignment center
+rectangle "Raw Data" as r
+database "Elasticsearch"
+cloud "GraphQL"
+collections "ReactJS"
+rectangle "User Interface \n\n<img:Pic3.png>" as UI 
+usecase "Data Pipeline (Python)" as Pipeline
+
+skinparam usecase {
+	BackgroundColor transparent
+	BorderColor White
+    Shadowing false
+	ArrowColor DodgerBlue
+}
+
+skinparam img{
+    scale 180*90
+}
+
+skinparam cloud{
+    BackgroundColor LightCyan
+}
+
+
+skinparam rectangle{
+    BackgroundColor LightCyan
+}
+
+skinparam database{
+    BackgroundColor LightCyan
+}
+
+skinparam actor{
+    BorderColor black
+}
+
+node Doctors {
+    actor " " as User1 #LightGreen
+    actor " " as User2 #LightPink
+}
+node Researchers {
+    actor " " as User3 #MediumPurple
+    actor " " as User4 #PaleTurquoise
+}
+
+skinparam note{
+    BackgroundColor LightYellow
+
+}
+
+
+(r) .do. (Pipeline)
+note right of r: Sequenced tumor samples\ncollected by researchers
+(Pipeline) .do.> (Elasticsearch)
+(Elasticsearch) -down-> (GraphQL)
+note left of Elasticsearch: Cells with assigned celltype (CellAssign)\nand reduced dimensionality (t-SNE)
+(GraphQL) -up-> (Elasticsearch)
+(GraphQL) -down-> (ReactJS)
+(ReactJS) -up->  (GraphQL)
+note right of GraphQL: Dynamic filtering by \n<b>cell type</b> and <b>marker gene</b>
+(ReactJS) .down.> (UI)
+note left of ReactJS: Interactive <b>cell type + marker gene table</b>,\n <b>t-SNE plots</b>,and <b>abundance plot</b>
+note right of UI: scRNA dashboard
+(UI) -down-> User1
+(UI) -down-> User2
+(UI) -d-> User3
+(UI) -d-> User4
+
+
+@enduml
+
